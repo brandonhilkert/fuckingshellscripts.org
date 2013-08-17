@@ -107,20 +107,20 @@ image_id: ami-90374bf9
 ############################################
 
 files:
-- files/keys/deploy_key
+  - files/keys/deploy_key
 
 ###########################################
 # Scripts needed to build the search server
 ###########################################
 
 scripts:
-- scripts/apt.sh
-- scripts/search_service_env.sh
-- scripts/git.sh
-- scripts/ruby2.sh
-- scripts/rubygems.sh
-- scripts/redis.sh
-- scripts/deploy_key.sh</pre>
+  - scripts/apt.sh
+  - scripts/search_service_env.sh
+  - scripts/git.sh
+  - scripts/ruby2.sh
+  - scripts/rubygems.sh
+  - scripts/redis.sh
+  - scripts/deploy_key.sh</pre>
           <p><code>servers/defaults.yml</code>has the same structure and keys a server definition file, <strong>except</strong>, you cannot define scripts or files.</p>
 
           <pre data-language='generic'>
