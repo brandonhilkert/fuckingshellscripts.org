@@ -6,7 +6,6 @@
     <title>Fucking Shell Scripts | The easiest, most common sense server configuration management tool</title>
     <meta name="description" content="The easiest, most common sense server configuration management tool...because you just use fucking shell scripts.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css" rel="stylesheet">
@@ -20,41 +19,46 @@
   </head>
 
   <body>
+    <a href="https://github.com/brandonhilkert/fucking_shell_scripts">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
+    </a>
     <div class='jumbotron'>
       <h1 class='hero'>Fucking Shell Scripts</h1>
       <p>The easiest, most common sense server configuration management tool...because you just use fucking shell scripts.</p>
     </div>
     <div class='row'>
       <div class='col-md-12'>
-        <p class='lead'>Completely confused by chef?  Blowing your brains out over ansible?  Wanna just use <strong>fucking shell scripts</strong> to configure a server? Read
+        <p class='lead'>Completely confused by Chef?  Blowing your brains out over Ansible?  Wanna just use <strong>fucking shell scripts</strong> to configure a server? Read
         on!</p>
         <h1>Features</h1>
         <ul>
           <li>Wraps up the fog gem, so it can be used on any cloud service, including AWS, rackspace, etc.</li>
-          <li>We've intentionally designed this tool to be insanely easy to use.</li>
+          <li>We've intentionally designed this tool to be insanely easy to use</li>
         </ul>
       </div>
     </div>
 
     <div class='row'>
       <div class="col-md-12">
-        <h1>It is so easy</h1>
-
-        <h3>Step 0: Install the gem</h3>
-        <pre data-language='shell'>
+        <section>
+          <h3>Step 0: Install the gem</h3>
+          <pre data-language='shell'>
 gem install fucking_shell_scripts</pre>
+        </section>
 
-        <h3>Step 1: Make yourself a directory</h3>
-        <pre data-language='shell'>
+        <section>
+          <h3>Step 1: Create a project directory</h3>
+          <pre data-language='shell'>
 mkdir config_management</pre>
-        <p>Fss requires 3 subdirectories, <code>/servers</code>, <code>/scripts</code>, and optionally <code>/files</code></p>
-        <ul>
-          <li><p><strong>/servers</strong> is the directory where you define each server. See the example below for how the definition is supposed to look.</p></li>
-          <li><p><strong>/scripts</strong> is where you put your fucking shell scripts that will configure your servers</p></li>
-          <li><p><strong>/files</strong> is where you put any files that need to go onto your servers.  These can be sensitive things like database.yml, ssh keys, etc.</p></li>
-          <p>Below is an example directory tree of how fss expects to see things.</p>
-        </ul>
-        <pre data-language='shell'>
+          <p>Folder structure:</p>
+          <ul>
+            <li><p><strong>/servers</strong> <em>(required)</em> - yaml server definitions <em>(see example below)</em></p></li>
+            <li><p><strong>/scripts</strong> <em>(required)</em> - the shell scripts that will configure your servers <em>(see example below)</em></p></li>
+            <li><p><strong>/files</strong> <em>(optional)</em> - files to be transferred to servers <em>(nginx.conf, ssh keys, database.yml, etc.)</em></p></li>
+          </ul>
+          <br />
+          <p>An example folder structure:</p>
+          <pre data-language='shell'>
 ./config_management
 ├── files
 │   ├── keys
@@ -71,16 +75,19 @@ mkdir config_management</pre>
 │   ├── search_service_code.sh
 │   └── search_service_env.sh
 └── servers
+│   ├── defaults.yml
     └── search-service.yml
-        </pre>
+          </pre>
+        </section>
 
-        <h3>Step 2: Create a <code>servers/[server].yml</code> file that defines your servers</h3>
-        <p>Here is <code>servers/search-server.yml</code>, which defines how to build a search server.  Server definitions override whatever is in defaults.yml.</p>
-        <pre data-language='generic'>
+        <section>
+          <h3>Step 2: Create a server definition file</h3>
+          <p>The server definition file defines how to build a type of server. Server definitions override settings in <code>defaults.yml</code>.</p>
+          <pre data-language='generic'>
 # servers/search-server.yml
-###########################################
-# This file defines how to build our search server.
-###########################################
+##################################################
+# This file defines how to build our search server
+##################################################
 
 security_groups: pd-app-server
 instance_type: c1.xlarge
@@ -91,35 +98,55 @@ key_name: pd-app-server
 
 name: search-server
 private_key_path: /Users/yourname/.ssh/pd-app-server
-security_groups: search-service  # this will override the security_groups defined in defaults.yml
+security_groups: search-service  # override the security_groups defined in defaults.yml
 instance_type: c1.medium
 image_id: ami-90374bf9
 
-###########################################
+############################################
 # Files necessary to build the search server
-###########################################
+############################################
 
 files:
-  - files/keys/deploy_key
+- files/keys/deploy_key
 
 ###########################################
 # Scripts needed to build the search server
 ###########################################
 
 scripts:
-  - scripts/apt.sh
-  - scripts/search_service_env.sh
-  - scripts/git.sh
-  - scripts/ruby2.sh
-  - scripts/rubygems.sh
-  - scripts/redis.sh
-  - scripts/deploy_key.sh</pre>
+- scripts/apt.sh
+- scripts/search_service_env.sh
+- scripts/git.sh
+- scripts/ruby2.sh
+- scripts/rubygems.sh
+- scripts/redis.sh
+- scripts/deploy_key.sh</pre>
+          <p><code>servers/defaults.yml</code>has the same structure and keys a server definition file, <strong>except</strong>, you cannot define scripts or files.</p>
 
-        <h3>Step 3:  Write shell scripts that configure the server</h3>
-        <p>No seriously.  Just write shell scripts.  Wanna install ruby?  Write a shell script that installs ruby.  Here, here's an example!</p>
-        <pre data-language='shell'>
-# This file is scripts/ruby2.sh
-# As you can see, it installs ruby 2.0.
+          <pre data-language='generic'>
+# servers/defaults.yml
+################################
+# This file defines our defaults
+################################
+
+security_groups: simple-group
+instance_type: c1.medium
+image_id: ami-e76ac58e
+availability_zone: us-east-1d
+region: us-east-1
+key_name: global-key
+        </section>
+
+
+        <section>
+          <h3>Step 3: Add shell scripts that configure the server</h3>
+          <p>Seriously...just write shell scripts.</p>
+          <p>Want to install Ruby 2? Here's an example:</p>
+          <pre data-language='shell'>
+#!/bin/sh
+#
+# scripts/ruby2.sh
+#
 sudo apt-get -y install build-essential zlib1g-dev libssl-dev libreadline6-dev libyaml-dev
 cd /tmp
 wget http://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p247.tar.gz
@@ -129,18 +156,40 @@ cd ruby-2.0.0-p247
 make
 sudo make install
 rm -rf /tmp/ruby*</pre>
+        </section>
 
-        <h3>Step 4:  make your server</h3>
-        <pre data-language='shell'>fss search-service</pre>
-        <p>This command does 2 things:</p>
-        <ol>
-          <li>Builds the new server</li>
-          <li>Runs the scripts configuration</li>
-        </ol>
+        <section>
+          <h3>Step 4: Build/configure your server</h3>
+          <pre data-language='shell'>fss search-service</pre>
+          <p>This command does 2 things:</p>
+          <ol>
+            <li>Builds the new server</li>
+            <li>Runs the scripts configuration</li>
+          </ol>
+          <br />
+          <p><strong>To build only:</strong></p>
+          <pre data-language='shell'>fss --build search-service</pre>
+          <p><strong>To configure only:</strong></p>
+          <pre data-language='shell'>fss --instance-id i-9ad6d7af --configure search-service</pre>
+          <p><em>Note: <code>--instance-id</code>is required when using the <code>--configure</code> option</em></p>
+        </section>
 
-        <h3>Step 5: Remove your chef repo and all its contents.</h3>
-         <pre>rm -rf ~/infra/chef</pre>
-        <h1>HOLY SHIT THAT WAS EASY.  YOU'RE WELCOME.</h1>
+        <section>
+          <h3>Step 5: Remove your chef repo and all its contents.</h3>
+           <pre>rm -rf ~/old_config_management/chef</pre>
+        </section>
+
+        <strong>HOLY SHIT THAT WAS EASY.</strong>
       </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-43240776-1', 'fuckingshellscripts.org');
+      ga('send', 'pageview');
+
+    </script>
   </body>
 </html>
