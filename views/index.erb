@@ -125,11 +125,16 @@ scripts:
 ################################
 
 security_groups: simple-group
-instance_type: c1.medium
-image_id: ami-e76ac58e
+size: c1.medium
+image: ami-e76ac58e
 availability_zone: us-east-1d
-region: us-east-1
 key_name: global-key
+cloud:
+  provider: AWS
+  aws_access_key_id: <%= "\<\=\% ENV['AWS_ACCESS_KEY'] \%\>" %>
+  aws_secret_access_key: <%= "\<\%\= ENV['AWS_SECRET_ACCESS_KEY'] \%\>" %>
+  region: us-east-1</pre>
+
         </section>
 
 
